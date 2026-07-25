@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factoría en Cuarentena - Desafío Condicional</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#3182CE">
+</head>
+<body>
+    <header class="top-bar">
+        <h1>Factoría: Laberinto</h1>
+        <div class="hud">
+            <span id="hud-energy">⚡ 15</span>
+            <span id="hud-prize">🎁 <span id="prize-count">0</span></span>
+            <span id="mission-status">🎯 Buscando</span>
+        </div>
+        <button id="btn-randomize" class="btn-primary">🎲 Nuevo Mapa</button>
+    </header>
+
+    <main class="workspace">
+        <!-- Mapa Protagonista (60% en móvil) -->
+        <aside class="simulation-section">
+            <h2>Estación (5x5)</h2>
+            <div class="map-container">
+                <div id="game-grid" class="grid-5x5"></div>
+            </div>
+        </aside>
+
+        <!-- Columna Bloques -->
+        <aside class="palette">
+            <h2>Bloques</h2>
+            <div class="blocks-container">
+                <div class="block block-mov" draggable="true" data-action="avanzar">⬆️ Avanzar</div>
+                <div class="block block-mov" draggable="true" data-action="girar-der">↻ Girar Der</div>
+                <div class="block block-mov" draggable="true" data-action="girar-izq">↺ Girar Izq</div>
+                <div class="block block-act" draggable="true" data-action="tomar">🤏 Tomar</div>
+                <div class="block block-cond" draggable="true" data-action="si-camino-libre">❓ SI libre</div>
+            </div>
+        </aside>
+
+        <!-- Columna Secuencia -->
+        <section class="canvas-section">
+            <div class="canvas-header">
+                <h2>Secuencia</h2>
+                <div class="canvas-actions">
+                    <button id="btn-clear" class="btn-secondary" title="Borrar">🗑️</button>
+                    <button id="btn-run" class="btn-success" title="Ejecutar">▶</button>
+                </div>
+            </div>
+            <div id="program-area" class="program-area">
+                <p class="placeholder-text">Arrastra o haz clic aquí...</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal / Mensaje Emergente -->
+    <div id="game-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2 id="modal-title">¡Título!</h2>
+            <p id="modal-desc">Descripción...</p>
+            <button id="modal-btn" class="btn-primary">Aceptar</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

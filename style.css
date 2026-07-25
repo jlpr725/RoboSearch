@@ -1,0 +1,302 @@
+:root {
+    --bg-color: #F0F4F8;
+    --text-dark: #2D3748;
+    --border-color: #CBD5E0;
+    --primary: #3182CE;
+    --success: #38A169;
+    --secondary: #718096;
+    --danger: #E53E3E;
+    
+    /* Bloques */
+    --block-mov: #4299E1;
+    --block-act: #48BB78;
+    --block-cond: #D69E2E;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-dark);
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background: #FFFFFF;
+    border-bottom: 2px solid var(--border-color);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    height: 45px;
+    flex-shrink: 0;
+}
+
+.top-bar h1 {
+    font-size: 0.95rem;
+}
+
+.hud {
+    display: flex;
+    gap: 4px;
+}
+
+.hud span {
+    font-weight: bold;
+    padding: 0.2rem 0.4rem;
+    background: #EDF2F7;
+    border-radius: 4px;
+    font-size: 0.7rem;
+}
+
+button {
+    padding: 0.3rem 0.6rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    color: white;
+    font-size: 0.8rem;
+    transition: opacity 0.2s;
+}
+
+button:hover { opacity: 0.9; }
+
+.btn-primary { background: var(--primary); }
+.btn-secondary { background: var(--secondary); }
+.btn-success { background: var(--success); font-size: 0.85rem; }
+
+/* Escritorio: Paleta (1fr), Secuencia (1fr) y Mapa (3.5fr) */
+.workspace {
+    display: grid;
+    grid-template-columns: 1fr 1fr 3.5fr;
+    flex: 1;
+    gap: 0.6rem;
+    padding: 0.6rem;
+    height: calc(100vh - 45px);
+    overflow: hidden;
+}
+
+.palette, .canvas-section, .simulation-section {
+    background: #FFFFFF;
+    border-radius: 8px;
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+    min-height: 0;
+}
+
+.palette h2, .canvas-header h2, .simulation-section h2 {
+    font-size: 0.85rem;
+    margin-bottom: 0.3rem;
+    color: #4A5568;
+}
+
+.blocks-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    overflow-y: auto;
+}
+
+.block {
+    padding: 0.35rem;
+    color: white;
+    border-radius: 5px;
+    cursor: grab;
+    font-weight: 600;
+    text-align: center;
+    font-size: 0.75rem;
+    box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+    user-select: none;
+}
+
+.block-mov { background-color: var(--block-mov); }
+.block-act { background-color: var(--block-act); }
+.block-cond { background-color: var(--block-cond); }
+
+.canvas-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.3rem;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+.canvas-actions {
+    display: flex;
+    gap: 4px;
+}
+
+.program-area {
+    flex: 1;
+    background: #F7FAFC;
+    border: 2px dashed var(--border-color);
+    border-radius: 6px;
+    padding: 0.3rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.placeholder-text {
+    color: var(--secondary);
+    text-align: center;
+    margin-top: 0.8rem;
+    font-style: italic;
+    font-size: 0.7rem;
+}
+
+.map-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #F7FAFC;
+    border: 2px dashed var(--border-color);
+    border-radius: 6px;
+    padding: 0.3rem;
+    overflow: hidden;
+}
+
+.grid-5x5 {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    gap: 4px;
+    background: #CBD5E0;
+    padding: 6px;
+    border-radius: 6px;
+    width: 100%;
+    max-width: 480px;
+    aspect-ratio: 1;
+}
+
+.tile {
+    background-color: #EDF2F7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    font-size: clamp(1rem, 2.5vw, 2rem);
+    position: relative;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.03);
+    transition: transform 0.2s ease;
+}
+
+@keyframes shake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    20% { transform: translate(-3px, 0px) rotate(-10deg); }
+    40% { transform: translate(1px, -1px) rotate(10deg); }
+    60% { transform: translate(-3px, 1px) rotate(0deg); }
+    80% { transform: translate(1px, -1px) rotate(10deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+.tile.obstacle-hit {
+    animation: shake 0.4s ease;
+    background-color: #FEB2B2 !important;
+}
+
+.tile.battery-taken {
+    animation: bounce 0.4s ease;
+    background-color: #C6F6D5 !important;
+}
+
+.modal {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-content {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 300px;
+    width: 90%;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.modal-content h2 { margin-bottom: 0.5rem; }
+.modal-content p { margin-bottom: 1rem; color: var(--secondary); font-size: 0.9rem; }
+
+/* Diseño Móvil: Mapa 60% arriba, 40% distribuido abajo */
+@media (max-width: 900px) {
+    body {
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    .top-bar {
+        height: 40px;
+        padding: 0.2rem 0.5rem;
+    }
+
+    .top-bar h1 {
+        font-size: 0.8rem;
+    }
+    
+    .workspace {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 60fr 40fr;
+        height: calc(100vh - 40px);
+        gap: 4px;
+        padding: 4px;
+        overflow: hidden;
+    }
+
+    .simulation-section {
+        grid-column: span 2;
+        height: 100%;
+    }
+
+    .palette, .canvas-section {
+        height: 100%;
+        min-height: 0;
+    }
+
+    .blocks-container {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .block {
+        font-size: 0.65rem;
+        padding: 0.25rem;
+    }
+
+    .grid-5x5 {
+        max-width: min(100%, 250px);
+    }
+}
