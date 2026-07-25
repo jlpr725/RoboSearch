@@ -37,35 +37,35 @@ body {
     background: #FFFFFF;
     border-bottom: 2px solid var(--border-color);
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    height: 50px;
+    height: 45px;
     flex-shrink: 0;
 }
 
 .top-bar h1 {
-    font-size: 1rem;
+    font-size: 0.95rem;
 }
 
 .hud {
     display: flex;
-    gap: 6px;
+    gap: 4px;
 }
 
 .hud span {
     font-weight: bold;
-    padding: 0.3rem 0.6rem;
+    padding: 0.2rem 0.4rem;
     background: #EDF2F7;
     border-radius: 4px;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
 }
 
 button {
-    padding: 0.4rem 0.8rem;
+    padding: 0.3rem 0.6rem;
     border: none;
     border-radius: 6px;
     cursor: pointer;
     font-weight: bold;
     color: white;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     transition: opacity 0.2s;
 }
 
@@ -73,23 +73,23 @@ button:hover { opacity: 0.9; }
 
 .btn-primary { background: var(--primary); }
 .btn-secondary { background: var(--secondary); }
-.btn-success { background: var(--success); font-size: 0.95rem; }
+.btn-success { background: var(--success); font-size: 0.85rem; }
 
-/* 🖥️ ESCRITORIO: El Mapa domina el espacio (2.5fr), seguido de Bloques (1fr) y Secuencia (1.8fr) */
+/* Escritorio: Paleta (1fr), Secuencia (1fr) y Mapa (3.5fr) */
 .workspace {
     display: grid;
-    grid-template-columns: 2.5fr 1fr 1.8fr;
+    grid-template-columns: 1fr 1fr 3.5fr;
     flex: 1;
-    gap: 0.8rem;
-    padding: 0.8rem;
-    height: calc(100vh - 50px);
+    gap: 0.6rem;
+    padding: 0.6rem;
+    height: calc(100vh - 45px);
     overflow: hidden;
 }
 
 .palette, .canvas-section, .simulation-section {
     background: #FFFFFF;
     border-radius: 8px;
-    padding: 0.8rem;
+    padding: 0.5rem;
     display: flex;
     flex-direction: column;
     box-shadow: 0 4px 6px rgba(0,0,0,0.02);
@@ -99,26 +99,26 @@ button:hover { opacity: 0.9; }
 }
 
 .palette h2, .canvas-header h2, .simulation-section h2 {
-    font-size: 0.95rem;
-    margin-bottom: 0.6rem;
+    font-size: 0.85rem;
+    margin-bottom: 0.3rem;
     color: #4A5568;
 }
 
 .blocks-container {
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
+    gap: 0.3rem;
     overflow-y: auto;
 }
 
 .block {
-    padding: 0.5rem;
+    padding: 0.35rem;
     color: white;
-    border-radius: 6px;
+    border-radius: 5px;
     cursor: grab;
     font-weight: 600;
     text-align: center;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     box-shadow: 0 2px 3px rgba(0,0,0,0.1);
     user-select: none;
 }
@@ -131,8 +131,8 @@ button:hover { opacity: 0.9; }
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.6rem;
-    gap: 6px;
+    margin-bottom: 0.3rem;
+    gap: 4px;
     flex-wrap: wrap;
 }
 
@@ -146,19 +146,19 @@ button:hover { opacity: 0.9; }
     background: #F7FAFC;
     border: 2px dashed var(--border-color);
     border-radius: 6px;
-    padding: 0.6rem;
+    padding: 0.3rem;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
+    gap: 0.3rem;
 }
 
 .placeholder-text {
     color: var(--secondary);
     text-align: center;
-    margin-top: 2rem;
+    margin-top: 0.8rem;
     font-style: italic;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
 }
 
 .map-container {
@@ -169,7 +169,7 @@ button:hover { opacity: 0.9; }
     background: #F7FAFC;
     border: 2px dashed var(--border-color);
     border-radius: 6px;
-    padding: 0.6rem;
+    padding: 0.3rem;
     overflow: hidden;
 }
 
@@ -177,12 +177,12 @@ button:hover { opacity: 0.9; }
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     grid-template-rows: repeat(5, 1fr);
-    gap: 8px;
+    gap: 4px;
     background: #CBD5E0;
-    padding: 10px;
-    border-radius: 8px;
+    padding: 6px;
+    border-radius: 6px;
     width: 100%;
-    max-width: 520px; /* Mapa amplio y destacado en escritorio */
+    max-width: 480px;
     aspect-ratio: 1;
 }
 
@@ -191,13 +191,14 @@ button:hover { opacity: 0.9; }
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 6px;
-    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    border-radius: 4px;
+    font-size: clamp(1rem, 2.5vw, 2rem);
     position: relative;
     box-shadow: inset 0 2px 4px rgba(0,0,0,0.03);
     transition: transform 0.2s ease;
 }
 
+/* Animaciones del Robot */
 @keyframes shake {
     0% { transform: translate(1px, 1px) rotate(0deg); }
     20% { transform: translate(-3px, 0px) rotate(-10deg); }
@@ -222,6 +223,7 @@ button:hover { opacity: 0.9; }
     background-color: #C6F6D5 !important;
 }
 
+/* Modal Emergente */
 .modal {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
@@ -249,7 +251,7 @@ button:hover { opacity: 0.9; }
 .modal-content h2 { margin-bottom: 0.5rem; }
 .modal-content p { margin-bottom: 1rem; color: var(--secondary); font-size: 0.9rem; }
 
-/* 📱 MÓVIL: Mapa 60% arriba, Bloques y Secuencia 40% abajo en dos columnas */
+/* Diseño Móvil: Mapa 60% arriba, 40% distribuido en 2 columnas abajo (Bloques y Secuencia) */
 @media (max-width: 900px) {
     body {
         height: 100vh;
@@ -268,13 +270,14 @@ button:hover { opacity: 0.9; }
     .workspace {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        grid-template-rows: 60fr 40fr;
+        grid-template-rows: 60fr 40fr; /* Mapa 60% exacto arriba, Bloques/Secuencia 40% abajo */
         height: calc(100vh - 40px);
         gap: 4px;
         padding: 4px;
         overflow: hidden;
     }
 
+    /* El mapa ocupa toda la parte superior abarcando ambas columnas */
     .simulation-section {
         grid-column: span 2;
         height: 100%;
