@@ -198,6 +198,7 @@ button:hover { opacity: 0.9; }
     transition: transform 0.2s ease;
 }
 
+/* Animaciones del Robot */
 @keyframes shake {
     0% { transform: translate(1px, 1px) rotate(0deg); }
     20% { transform: translate(-3px, 0px) rotate(-10deg); }
@@ -222,6 +223,7 @@ button:hover { opacity: 0.9; }
     background-color: #C6F6D5 !important;
 }
 
+/* Modal Emergente */
 .modal {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
@@ -249,7 +251,7 @@ button:hover { opacity: 0.9; }
 .modal-content h2 { margin-bottom: 0.5rem; }
 .modal-content p { margin-bottom: 1rem; color: var(--secondary); font-size: 0.9rem; }
 
-/* Diseño Móvil: Mapa 60% arriba, 40% distribuido abajo */
+/* Diseño Móvil: Mapa 60% arriba, 40% distribuido en 2 columnas abajo (Bloques y Secuencia) */
 @media (max-width: 900px) {
     body {
         height: 100vh;
@@ -268,13 +270,14 @@ button:hover { opacity: 0.9; }
     .workspace {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        grid-template-rows: 60fr 40fr;
+        grid-template-rows: 60fr 40fr; /* Mapa 60% exacto arriba, Bloques/Secuencia 40% abajo */
         height: calc(100vh - 40px);
         gap: 4px;
         padding: 4px;
         overflow: hidden;
     }
 
+    /* El mapa ocupa toda la parte superior abarcando ambas columnas */
     .simulation-section {
         grid-column: span 2;
         height: 100%;
