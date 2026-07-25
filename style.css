@@ -1,26 +1,34 @@
 :root {
-    --bg-color: #F0F4F8;
-    --text-dark: #2D3748;
-    --border-color: #CBD5E0;
-    --primary: #3182CE;
-    --success: #38A169;
-    --secondary: #718096;
-    --danger: #E53E3E;
+    --bg-color: #0d1117;
+    --text-dark: #c9d1d9;
+    --border-color: #30363d;
+    --primary: #17cf73; 
+    --success: #3fb950;
+    --secondary: #8b949e;
+    --danger: #f85149;
     
-    /* Bloques */
-    --block-mov: #4299E1;
-    --block-act: #48BB78;
-    --block-cond: #D69E2E;
+    /* Bloques Estilo Consola */
+    --block-mov: #1a7fcc; 
+    --block-act: #1a9e55;
+    --block-cond: #d4a017;
+    --block-jump: #9f7aea; 
+    --block-mod: #ed64a6; 
+    
+    --panel-bg: #161b22;
+    --header-bg: #161b22;
+    --tile-bg: #0d1117;
+    --tile-border: #161b22;
 }
 
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', 'Roboto', Tahoma, Geneva, Verdana, sans-serif;
+    user-select: none; 
 }
 
-body {
+body.game-theme {
     background-color: var(--bg-color);
     color: var(--text-dark);
     display: flex;
@@ -29,136 +37,241 @@ body {
     overflow: hidden;
 }
 
-.top-bar {
+.game-header {
+    background-color: var(--header-bg);
+    border-bottom: 2px solid var(--border-color);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    height: 60px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.5rem 1rem;
-    background: #FFFFFF;
-    border-bottom: 2px solid var(--border-color);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    height: 45px;
-    flex-shrink: 0;
+    padding: 0 1.5rem;
 }
 
-.top-bar h1 {
-    font-size: 0.95rem;
-}
-
-.hud {
+.game-hud {
     display: flex;
-    gap: 4px;
+    gap: 8px;
 }
 
-.hud span {
+.hud-item {
     font-weight: bold;
-    padding: 0.2rem 0.4rem;
-    background: #EDF2F7;
-    border-radius: 4px;
-    font-size: 0.7rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
-button {
-    padding: 0.3rem 0.6rem;
+.energy-panel { background: #1a7fcc33; color: #42a5f5; border-color: #1a7fcc; }
+.prize-panel { background: #d4a01733; color: #ffd54f; border-color: #d4a017; }
+.status-panel { background: #161b22; color: #8b949e; }
+
+.btn-game {
+    padding: 0.5rem 1rem;
     border: none;
     border-radius: 6px;
-    cursor: pointer;
+    font-size: 0.9rem;
     font-weight: bold;
     color: white;
-    font-size: 0.8rem;
-    transition: opacity 0.2s;
+    cursor: pointer;
+    box-shadow: inset 0 -2px 0 rgba(0,0,0,0.3);
+    transition: all 0.2s;
 }
 
-button:hover { opacity: 0.9; }
+.btn-primary { background-color: var(--primary); }
+.btn-secondary { background-color: var(--secondary); }
+.btn-success { background-color: var(--success); }
 
-.btn-primary { background: var(--primary); }
-.btn-secondary { background: var(--secondary); }
-.btn-success { background: var(--success); font-size: 0.85rem; }
+.btn-game:hover { opacity: 0.9; transform: translateY(-1px); }
+.btn-game:active { transform: translateY(1px); box-shadow: inset 0 2px 0 rgba(0,0,0,0.3); }
 
-/* Escritorio: Paleta (1fr), Secuencia (1fr) y Mapa (3.5fr) */
-.workspace {
+/* ESCRITORIO: Mapa 70% | Controles 30% */
+.game-workspace {
     display: grid;
-    grid-template-columns: 1fr 1fr 3.5fr;
-    flex: 1;
-    gap: 0.6rem;
-    padding: 0.6rem;
-    height: calc(100vh - 45px);
+    grid-template-columns: 7fr 3fr; /* Proporción estricta 70/30 */
+    gap: 1rem;
+    padding: 1rem;
+    height: calc(100vh - 60px);
     overflow: hidden;
 }
 
-.palette, .canvas-section, .simulation-section {
-    background: #FFFFFF;
-    border-radius: 8px;
-    padding: 0.5rem;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-    border: 1px solid var(--border-color);
-    overflow: hidden;
+.controls-wrapper {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: 1rem;
     min-height: 0;
 }
 
-.palette h2, .canvas-header h2, .simulation-section h2 {
-    font-size: 0.85rem;
-    margin-bottom: 0.3rem;
-    color: #4A5568;
-}
-
-.blocks-container {
+.game-panel {
+    background: var(--panel-bg);
+    border-radius: 12px;
+    padding: 1rem;
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
-    overflow-y: auto;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
 }
 
-.block {
-    padding: 0.35rem;
-    color: white;
-    border-radius: 5px;
-    cursor: grab;
-    font-weight: 600;
+.game-panel h2 {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    color: #8b949e;
     text-align: center;
-    font-size: 0.75rem;
-    box-shadow: 0 2px 3px rgba(0,0,0,0.1);
-    user-select: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* --- Paleta de bloques --- */
+.game-block-palette {
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 8px;
+    justify-content: center;
+}
+
+/* --- Forma Cuadrada de los Bloques --- */
+.block-game {
+    width: 3.5rem; 
+    height: 3.5rem; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem; 
+    color: white;
+    border-radius: 8px;
+    cursor: grab;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2), inset 0 -3px 0 rgba(0,0,0,0.3);
+}
+
+.block-label {
+    font-size: 0.7rem;
+    font-weight: bold;
+    margin-top: 2px;
+    line-height: 1;
 }
 
 .block-mov { background-color: var(--block-mov); }
 .block-act { background-color: var(--block-act); }
 .block-cond { background-color: var(--block-cond); }
+.block-jump { background-color: var(--block-jump); }
+.block-mod { background-color: var(--block-mod); }
+
+.block-in-program {
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.block-in-program::after {
+    content: "✖";
+    position: absolute;
+    right: 4px;
+    top: 4px;
+    color: white;
+    font-size: 10px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    text-shadow: 0 0 2px black;
+}
+
+.block-in-program:hover {
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(248, 81, 73, 0.8); 
+    opacity: 0.9;
+}
+.block-in-program:hover::after { opacity: 1; }
 
 .canvas-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.3rem;
-    gap: 4px;
-    flex-wrap: wrap;
+    margin-bottom: 0.5rem;
 }
 
-.canvas-actions {
+.game-actions {
     display: flex;
-    gap: 4px;
+    gap: 6px;
 }
 
-.program-area {
-    flex: 1;
-    background: #F7FAFC;
+/* --- Secuencia Horizontal con Salto de Línea --- */
+.game-program-area {
+    display: flex;
+    flex-direction: row; 
+    flex-wrap: wrap; 
+    align-content: flex-start; 
+    gap: 8px;
+    background: var(--tile-bg);
     border: 2px dashed var(--border-color);
-    border-radius: 6px;
-    padding: 0.3rem;
+    border-radius: 8px;
+    padding: 0.8rem;
     overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
+    flex: 1;
+}
+
+.game-program-area.drag-over {
+    background: #17cf731a;
+    border-color: #17cf73;
 }
 
 .placeholder-text {
     color: var(--secondary);
+    font-size: 0.85rem;
     text-align: center;
-    margin-top: 0.8rem;
-    font-style: italic;
-    font-size: 0.7rem;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+/* Estilos de bucles anidados en la secuencia */
+.block-in-program.block-mod {
+    width: auto;
+    min-width: 3.8rem;
+    height: auto;
+    min-height: 3.8rem;
+    padding: 6px;
+}
+.block-mod.mod-drag-over {
+    background-color: #f687b3;
+    border: 2px dashed white;
+}
+.mod-slot {
+    background: rgba(0,0,0,0.25);
+    border: 1px dashed rgba(255,255,255,0.6);
+    border-radius: 6px;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.6);
+    pointer-events: none;
+    margin-top: 4px;
+}
+.block-nested {
+    width: 2.5rem;
+    height: 2.5rem; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    margin: 0;
+    position: relative;
+    border-radius: 6px;
+    color: white;
+}
+.block-nested::after {
+    content: "✖"; position: absolute; right: 2px; top: 2px; font-size: 8px; opacity:0; transition: 0.2s; text-shadow: 0 0 2px black;
+}
+.block-nested:hover { cursor: pointer; background-color: var(--danger) !important; }
+.block-nested:hover::after { opacity: 1; }
+
+/* MAPA PROTAGONISTA (70%) */
+.game-map-container {
+    padding: 1rem;
 }
 
 .map-container {
@@ -166,140 +279,107 @@ button:hover { opacity: 0.9; }
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #F7FAFC;
-    border: 2px dashed var(--border-color);
-    border-radius: 6px;
-    padding: 0.3rem;
     overflow: hidden;
 }
 
-.grid-5x5 {
+.game-grid {
+    border: 4px solid var(--tile-border);
+    border-radius: 12px;
+    background: var(--tile-bg);
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+    aspect-ratio: 1; 
+    padding: 12px;
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     grid-template-rows: repeat(5, 1fr);
-    gap: 4px;
-    background: #CBD5E0;
-    padding: 6px;
-    border-radius: 6px;
-    width: 100%;
-    max-width: 480px;
-    aspect-ratio: 1;
+    gap: 6px;
 }
 
 .tile {
-    background-color: #EDF2F7;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 4px;
-    font-size: clamp(1rem, 2.5vw, 2rem);
+    border-radius: 8px;
+    font-size: clamp(1.5rem, 4vw, 3.5rem); 
     position: relative;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.03);
-    transition: transform 0.2s ease;
-}
-
-/* Animaciones del Robot */
-@keyframes shake {
-    0% { transform: translate(1px, 1px) rotate(0deg); }
-    20% { transform: translate(-3px, 0px) rotate(-10deg); }
-    40% { transform: translate(1px, -1px) rotate(10deg); }
-    60% { transform: translate(-3px, 1px) rotate(0deg); }
-    80% { transform: translate(1px, -1px) rotate(10deg); }
-    100% { transform: translate(0, 0) rotate(0deg); }
-}
-
-@keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-8px); }
-}
-
-.tile.obstacle-hit {
-    animation: shake 0.4s ease;
-    background-color: #FEB2B2 !important;
-}
-
-.tile.battery-taken {
-    animation: bounce 0.4s ease;
-    background-color: #C6F6D5 !important;
-}
-
-/* Modal Emergente */
-.modal {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.5);
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.2);
+    background-color: var(--tile-bg);
+    border: 1px solid #161b22;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+/* Animaciones Premium */
+@keyframes shake { 0% { transform: translate(1px, 1px); } 20% { transform: translate(-3px, -1px); } 40% { transform: translate(1px, -3px); } 60% { transform: translate(-3px, 1px); } 80% { transform: translate(2px, -1px); } 100% { transform: translate(0, 0); } }
+@keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+
+.tile.obstacle-hit { animation: shake 0.4s ease; background-color: #f8514933 !important; border-color: var(--danger); }
+.tile.battery-taken { animation: bounce 0.4s ease; background-color: #1a9e5533 !important; border-color: var(--success); }
+
+/* Modales */
+.game-modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: flex; align-items: center; justify-content: center;
     z-index: 1000;
 }
-
-.modal.hidden {
-    display: none;
-}
-
-.modal-content {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 10px;
+.modal.hidden { display: none; }
+.game-modal-content {
+    background: var(--panel-bg);
+    padding: 2rem;
+    border-radius: 16px;
     text-align: center;
-    max-width: 300px;
+    max-width: 350px;
     width: 90%;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    border: 1px solid var(--border-color);
 }
+.game-modal-content h2 { color: #e6edf3; margin-bottom: 1rem; font-size: 1.5rem; }
+.game-modal-content p { color: var(--text-dark); font-size: 1rem; margin-bottom: 1.5rem; }
 
-.modal-content h2 { margin-bottom: 0.5rem; }
-.modal-content p { margin-bottom: 1rem; color: var(--secondary); font-size: 0.9rem; }
-
-/* Diseño Móvil: Mapa 60% arriba, 40% distribuido en 2 columnas abajo (Bloques y Secuencia) */
+/* DISEÑO MÓVIL: Mapa 70% | Controles 30% (Vertical) */
 @media (max-width: 900px) {
-    body {
-        height: 100vh;
-        overflow: hidden;
+    .game-header { padding: 0 0.5rem; height: 50px; }
+    
+    .game-workspace {
+        grid-template-columns: 1fr;
+        grid-template-rows: 7fr 3fr; 
+        padding: 0.4rem;
+        gap: 0.4rem;
+        height: calc(100vh - 50px);
     }
 
-    .top-bar {
-        height: 40px;
-        padding: 0.2rem 0.5rem;
+    .controls-wrapper {
+        grid-template-rows: auto 1fr;
+        gap: 0.4rem;
     }
 
-    .top-bar h1 {
-        font-size: 0.8rem;
+    .game-panel { padding: 0.5rem; border-radius: 8px; }
+    .game-panel h2 { display: none; } 
+
+    .game-block-palette {
+        gap: 4px;
     }
     
-    .workspace {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: 60fr 40fr; /* Mapa 60% exacto arriba, Bloques/Secuencia 40% abajo */
-        height: calc(100vh - 40px);
+    .block-game {
+        width: 2.8rem;
+        height: 2.8rem;
+        font-size: 1.3rem;
+    }
+
+    .canvas-header { margin-bottom: 0; }
+    .game-map-container { padding: 0.2rem; }
+    .game-grid {
+        max-width: 100%;
+        max-height: 100%;
         gap: 4px;
-        padding: 4px;
-        overflow: hidden;
+        padding: 6px;
     }
 
-    /* El mapa ocupa toda la parte superior abarcando ambas columnas */
-    .simulation-section {
-        grid-column: span 2;
-        height: 100%;
-    }
-
-    .palette, .canvas-section {
-        height: 100%;
-        min-height: 0;
-    }
-
-    .blocks-container {
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
-    }
-
-    .block {
-        font-size: 0.65rem;
-        padding: 0.25rem;
-    }
-
-    .grid-5x5 {
-        max-width: min(100%, 250px);
-    }
+    /* Panel de Vidas en el HUD */
+.lives-panel { 
+    background: #f8514933; 
+    color: #f85149; 
+    border-color: #f85149; 
+}
 }
