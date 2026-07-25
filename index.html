@@ -2,64 +2,78 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Factoría en Cuarentena - Desafío Condicional</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Factoría Premium</title>
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0d1117">
 </head>
-<body>
-    <header class="top-bar">
-        <h1>Factoría: Laberinto</h1>
-        <div class="hud">
-            <span id="hud-energy">⚡ 15</span>
-            <span id="hud-prize">🎁 <span id="prize-count">0</span></span>
-            <span id="mission-status">🎯 Buscando</span>
+<body class="game-theme">
+    <header class="top-bar game-header">
+        <div class="hud game-hud">
+            <div class="hud-item energy-panel"><span class="icon">⚡</span> <span id="hud-energy-count">15</span></div>
+            <div class="hud-item prize-panel"><span class="icon">🎁</span> <span id="prize-count">0</span></div>
+            
         </div>
-        <button id="btn-randomize" class="btn-primary">🎲 Nuevo Mapa</button>
+        <button id="btn-randomize" class="btn-primary btn-game btn-roll"><span class="icon">🎲</span> Nuevo Mapa</button>
     </header>
 
-    <main class="workspace">
-        <!-- Mapa Protagonista (60% en móvil) -->
-        <aside class="simulation-section">
-            <h2>Estación (5x5)</h2>
+    <main class="workspace game-workspace">
+        <!-- Mapa Protagonista (70%) -->
+        <aside class="simulation-section game-panel game-map-container">
             <div class="map-container">
-                <div id="game-grid" class="grid-5x5"></div>
+                <div id="game-grid" class="grid-5x5 game-grid"></div>
             </div>
         </aside>
 
-        <!-- Columna Bloques -->
-        <aside class="palette">
-            <h2>Bloques</h2>
-            <div class="blocks-container">
-                <div class="block block-mov" draggable="true" data-action="avanzar">⬆️ Avanzar</div>
-                <div class="block block-mov" draggable="true" data-action="girar-der">↻ Girar Der</div>
-                <div class="block block-mov" draggable="true" data-action="girar-izq">↺ Girar Izq</div>
-                <div class="block block-act" draggable="true" data-action="tomar">🤏 Tomar</div>
-                <div class="block block-cond" draggable="true" data-action="si-camino-libre">❓ SI libre</div>
-            </div>
-        </aside>
-
-        <!-- Columna Secuencia -->
-        <section class="canvas-section">
-            <div class="canvas-header">
-                <h2>Secuencia</h2>
-                <div class="canvas-actions">
-                    <button id="btn-clear" class="btn-secondary" title="Borrar">🗑️</button>
-                    <button id="btn-run" class="btn-success" title="Ejecutar">▶</button>
+        <!-- Contenedor del 30% restante (Bloques y Secuencia) -->
+        <div class="controls-wrapper">
+            <!-- Sección de Controles -->
+            <aside class="palette game-panel game-controls">
+                <h2>Bloques</h2>
+                <div class="blocks-container game-block-palette">
+                    <div class="block block-mov block-game" draggable="true" data-action="avanzar" data-icon="⬆️" title="Avanzar">⬆️</div>
+                    <div class="block block-mov block-game" draggable="true" data-action="girar-der" data-icon="↻" title="Girar Derecha">↻</div>
+                    <div class="block block-mov block-game" draggable="true" data-action="girar-izq" data-icon="↺" title="Girar Izquierda">↺</div>
+                    <div class="block block-jump block-game" draggable="true" data-action="saltar" data-icon="🦘" title="Saltar">🦘</div>
+                    <div class="block block-act block-game" draggable="true" data-action="tomar" data-icon="🤏" title="Tomar">🤏</div>
+                    <div class="block block-cond block-game" draggable="true" data-action="si-camino-libre" data-icon="❓" title="Si camino libre">❓</div>
+                    
+                    <!-- Bloques Multiplicadores (Icono + Texto debajo) -->
+                    <div class="block block-mod block-game" draggable="true" data-action="x2" data-icon="🔁" data-label="x2" title="Repetir x2">
+                        🔁<span class="block-label">x2</span>
+                    </div>
+                    <div class="block block-mod block-game" draggable="true" data-action="x3" data-icon="🔁" data-label="x3" title="Repetir x3">
+                        🔁<span class="block-label">x3</span>
+                    </div>
+                    <div class="block block-mod block-game" draggable="true" data-action="x4" data-icon="🔁" data-label="x4" title="Repetir x4">
+                        🔁<span class="block-label">x4</span>
+                    </div>
                 </div>
-            </div>
-            <div id="program-area" class="program-area">
-                <p class="placeholder-text">Arrastra o haz clic aquí...</p>
-            </div>
-        </section>
+            </aside>
+
+            <!-- Área de Secuencia -->
+            <section class="canvas-section game-panel game-sequence">
+                <div class="canvas-header">
+                    <h2>Secuencia</h2>
+                    <div class="canvas-actions game-actions">
+                        <button id="btn-clear" class="btn-secondary btn-game" title="Borrar todo">🗑️</button>
+                        <button id="btn-run" class="btn-success btn-game" title="Ejecutar">▶</button>
+                    </div>
+                </div>
+                <div id="program-area" class="program-area game-program-area">
+                    <p class="placeholder-text">Arrastra bloques aquí...</p>
+                </div>
+            </section>
+        </div>
     </main>
 
-    <!-- Modal / Mensaje Emergente -->
-    <div id="game-modal" class="modal hidden">
-        <div class="modal-content">
+    <!-- Modal / Mensaje Emergente Estilizado -->
+    <div id="game-modal" class="modal hidden game-modal-overlay">
+        <div class="modal-content game-modal-content">
             <h2 id="modal-title">¡Título!</h2>
             <p id="modal-desc">Descripción...</p>
-            <button id="modal-btn" class="btn-primary">Aceptar</button>
+            <button id="modal-btn" class="btn-primary btn-game">Aceptar</button>
         </div>
     </div>
 
