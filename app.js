@@ -82,7 +82,6 @@ function buildPalette() {
     BLOCKS_DEF.forEach(def => {
         const row = document.createElement('div');
         row.className = 'block-row';
-        row.draggable = true;
         row.dataset.action = def.action;
         row.dataset.icon = def.icon;
         row.dataset.label = def.label;
@@ -99,35 +98,57 @@ function buildPalette() {
         row.appendChild(label);
         blocksContainer.appendChild(row);
 
-        row.addEventListener('dragstart', (e) => {
-            e.dataTransfer.setData('action', def.action);
-            e.dataTransfer.setData('icon', def.icon);
-            e.dataTransfer.setData('label', def.label);
+        row.addEventListener('pointerdown', (e) => {
+            if (e.button !== undefined && e.button !== 0) return;
+            e.preventDefault();
+            try { row.setPointerCapture(e.pointerId); } catch (err) {}
+            startDrag(e.pointerId, def.action, def.icon, def.label, e.clientX, e.clientY);
+        });
+        row.addEventListener('pointermove', (e) => {
+            if (!dragState || dragState.pointerId !== e.pointerId) return;
+            moveDrag(e.clientX, e.clientY);
+        });
+        row.addEventListener('pointerup', (e) => {
+            if (!dragState || dragState.pointerId !== e.pointerId) return;
+            endDrag(e.clientX, e.clientY);
+        });
+        row.addEventListener('pointercancel', (e) => {
+            if (!dragState || dragState.pointerId !== e.pointerId) return;
+            cleanupDrag();
         });
     });
 }
 
 // ---------------- GENERACIÓN DE MAPA ----------------
+const NUM_OBSTACLES = 7;
+const MAX_PISO_RAMAS = 7;
+const MIN_DIST_FROM_START = 4; // distancia mínima (Manhattan) desde (0,0)
+
 function generateRandomMap() {
     STATE.robot = { x: 0, y: 0, dir: 'E' };
     STATE.missionCompleted = false;
     STATE.obstacles = [];
     STATE.energy = 15;
 
+    // El tesoro siempre aparece en el cuadrante más alejado del inicio
     STATE.treasure = {
         x: Math.floor(Math.random() * 3) + 5, 
         y: Math.floor(Math.random() * 3) + 5  
     };
 
+    // El booster también debe quedar alejado del inicio y no coincidir con el tesoro
     let bx, by;
     do {
         bx = Math.floor(Math.random() * (STATE.gridSize - 2)) + 1;
         by = Math.floor(Math.random() * (STATE.gridSize - 2)) + 1;
-    } while ((bx === 0 && by === 0) || (bx === STATE.treasure.x && by === STATE.treasure.y));
+    } while (
+        (bx + by) < MIN_DIST_FROM_START ||
+        (bx === STATE.treasure.x && by === STATE.treasure.y)
+    );
     STATE.booster = { x: bx, y: by, active: true };
 
-    const numObstacles = Math.floor(Math.random() * 4) + 6; 
-    while (STATE.obstacles.length < numObstacles) {
+    // Siempre exactamente 7 obstáculos/bloqueos en el tablero
+    while (STATE.obstacles.length < NUM_OBSTACLES) {
         const ox = Math.floor(Math.random() * STATE.gridSize);
         const oy = Math.floor(Math.random() * STATE.gridSize);
         const occupied =
@@ -140,13 +161,29 @@ function generateRandomMap() {
         }
     }
 
+    // Piso base: piso_1 / piso_2 / piso_3 distribuidos aleatoriamente
+    const BASE_FLOORS = ['piso_1.png', 'piso_2.png', 'piso_3.png'];
     STATE.floorTiles = [];
     for (let row = 0; row < STATE.gridSize; row++) {
         const rowTiles = [];
         for (let col = 0; col < STATE.gridSize; col++) {
-            rowTiles.push(FLOOR_IMAGES[Math.floor(Math.random() * FLOOR_IMAGES.length)]);
+            rowTiles.push(BASE_FLOORS[Math.floor(Math.random() * BASE_FLOORS.length)]);
         }
         STATE.floorTiles.push(rowTiles);
+    }
+
+    // piso_ramas es solo decorativo: máximo 7 losetas, bien distribuidas
+    const ramasCount = Math.floor(Math.random() * 4) + 4; // entre 4 y 7
+    let placed = 0;
+    let attempts = 0;
+    while (placed < ramasCount && attempts < 200) {
+        attempts++;
+        const rx = Math.floor(Math.random() * STATE.gridSize);
+        const ry = Math.floor(Math.random() * STATE.gridSize);
+        if (rx === 0 && ry === 0) continue;
+        if (STATE.floorTiles[ry][rx] === 'piso_ramas.png') continue;
+        STATE.floorTiles[ry][rx] = 'piso_ramas.png';
+        placed++;
     }
 
     buildStaticGrid();
@@ -220,7 +257,8 @@ function positionOverlay(el, x, y) {
     el.style.top = `${y * p}%`;
     el.style.width = `${p}%`;
     el.style.height = `${p}%`;
-    el.style.inset = 'auto'; 
+    el.style.right = 'auto';
+    el.style.bottom = 'auto';
     el.style.margin = '0';
 }
 
@@ -247,36 +285,82 @@ function flashTile(row, col, className, duration = 450) {
     setTimeout(() => tile.classList.remove(className), duration);
 }
 
-// ---------------- DRAG AND DROP ----------------
-programArea.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    const targetMod = e.target.closest('.block-loop.block-in-program');
-    if (targetMod) targetMod.classList.add('mod-drag-over');
-    else programArea.classList.add('drag-over');
-});
-programArea.addEventListener('dragleave', () => {
-    document.querySelectorAll('.block-loop').forEach(b => b.classList.remove('mod-drag-over'));
-    programArea.classList.remove('drag-over');
-});
-programArea.addEventListener('drop', (e) => {
-    e.preventDefault();
-    programArea.classList.remove('drag-over');
-    document.querySelectorAll('.block-loop').forEach(b => b.classList.remove('mod-drag-over'));
+// ---------------- DRAG AND DROP (Pointer Events: mouse + touch) ----------------
+// Se usa la API de Pointer Events en lugar del Drag and Drop nativo de HTML5,
+// porque este último no funciona en pantallas táctiles y por lo tanto el bloque
+// nunca llegaba al frame de secuencia en móvil. Además, al usar coordenadas de
+// pantalla (clientX/clientY) y document.elementFromPoint, la detección del
+// destino funciona correctamente incluso con el giro de pantalla en móvil
+// (transform: rotate(90deg)) y el escalado del stage, porque el navegador ya
+// resuelve el hit-testing sobre el layout final (transformado).
+let dragState = null;
 
-    const action = e.dataTransfer.getData('action');
-    const icon = e.dataTransfer.getData('icon');
-    const label = e.dataTransfer.getData('label');
-    if (!action) return;
+function startDrag(pointerId, action, icon, label, clientX, clientY) {
+    cleanupDrag();
 
-    const targetMod = e.target.closest('.block-loop.block-in-program');
-    if (targetMod && action !== 'loop') {
-        addBlockInsideLoop(targetMod, action, icon);
-    } else {
-        addBlockToProgram(action, icon, label);
+    const ghost = document.createElement('div');
+    ghost.className = 'drag-ghost';
+    ghost.style.backgroundImage = `url('${BLOCKS_PATH}${icon}')`;
+    document.body.appendChild(ghost);
+
+    dragState = { pointerId, action, icon, label, ghostEl: ghost };
+    moveDrag(clientX, clientY);
+}
+
+function moveDrag(clientX, clientY) {
+    if (!dragState) return;
+    dragState.ghostEl.style.left = `${clientX}px`;
+    dragState.ghostEl.style.top = `${clientY}px`;
+    updateDragHover(clientX, clientY);
+}
+
+function updateDragHover(clientX, clientY) {
+    document.querySelectorAll('.block-loop.mod-drag-over').forEach(b => b.classList.remove('mod-drag-over'));
+    programArea.classList.remove('drag-over');
+
+    const el = document.elementFromPoint(clientX, clientY);
+    if (!el) return;
+
+    const targetMod = el.closest('.block-loop.block-in-program');
+    if (targetMod && dragState.action !== 'loop') {
+        targetMod.classList.add('mod-drag-over');
+    } else if (el.closest('#program-area')) {
+        programArea.classList.add('drag-over');
     }
-});
+}
+
+function endDrag(clientX, clientY) {
+    if (!dragState) return;
+    const { action, icon, label } = dragState;
+
+    const el = document.elementFromPoint(clientX, clientY);
+    if (el) {
+        const targetMod = el.closest('.block-loop.block-in-program');
+        if (targetMod && action !== 'loop') {
+            addBlockInsideLoop(targetMod, action, icon);
+        } else if (el.closest('#program-area')) {
+            addBlockToProgram(action, icon, label);
+        }
+    }
+    cleanupDrag();
+}
+
+function cleanupDrag() {
+    if (dragState && dragState.ghostEl) dragState.ghostEl.remove();
+    document.querySelectorAll('.block-loop.mod-drag-over').forEach(b => b.classList.remove('mod-drag-over'));
+    programArea.classList.remove('drag-over');
+    dragState = null;
+}
+
+const MAX_SEQUENCE_BLOCKS = 15;
 
 function addBlockToProgram(action, icon, label) {
+    const currentCount = programArea.querySelectorAll(':scope > .block').length;
+    if (currentCount >= MAX_SEQUENCE_BLOCKS) {
+        showModal('¡Secuencia llena! 🧩', `Solo puedes usar hasta ${MAX_SEQUENCE_BLOCKS} bloques en la secuencia (uno por cada punto de energía).`, 'Entendido', () => {});
+        return;
+    }
+
     const placeholder = programArea.querySelector('.placeholder-text');
     if (placeholder) placeholder.remove();
 
@@ -375,6 +459,24 @@ document.getElementById('btn-run').addEventListener('click', async () => {
         generateRandomMap();
     };
 
+    const SCORE_TARGET = 100;
+    const checkScoreMilestone = () => {
+        if (STATE.prizes >= SCORE_TARGET) {
+            showModal(
+                '¡Felicidades! 🏆',
+                `¡Llegaste a ${SCORE_TARGET} premios! Pronto habrá una actualización con más niveles. Sigue practicando: ¡empezamos una partida nueva!`,
+                'Jugar de nuevo',
+                () => {
+                    STATE.prizes = 0;
+                    STATE.lives = 5;
+                    resetLevel();
+                }
+            );
+            return true;
+        }
+        return false;
+    };
+
     const handleFailure = (title, msg) => {
         gameOver = true;
         STATE.lives--;
@@ -426,7 +528,7 @@ document.getElementById('btn-run').addEventListener('click', async () => {
 
         if (STATE.booster.active && STATE.robot.x === STATE.booster.x && STATE.robot.y === STATE.booster.y) {
             STATE.booster.active = false;
-            STATE.energy += 5;
+            STATE.energy = Math.min(15, STATE.energy + 2);
             updateBoosterVisibility();
             updateHUD();
         }
@@ -436,7 +538,10 @@ document.getElementById('btn-run').addEventListener('click', async () => {
             STATE.prizes += 10;
             updateTreasureVisibility();
             flashTile(STATE.robot.y, STATE.robot.x, 'battery-taken');
-            showModal('¡Victoria! 🎉', '¡Tesoro asegurado! +10 premios.', 'Continuar', resetLevel);
+            updateHUD();
+            if (!checkScoreMilestone()) {
+                showModal('¡Victoria! 🎉', '¡Tesoro asegurado! +10 premios.', 'Continuar', resetLevel);
+            }
             return;
         }
 
@@ -458,10 +563,10 @@ document.getElementById('btn-run').addEventListener('click', async () => {
             STATE.energy--; updateHUD();
             await executeSingle(inst.action);
         } else if (inst.type === 'loop') {
-            const cost = Math.ceil(inst.mult / 2);
+            const cost = inst.mult;
             if (STATE.energy < cost) { handleFailure('¡Batería Agotada!', 'Energía insuficiente para ejecutar este loop.'); break; }
-            STATE.energy -= cost; updateHUD();
             for (let i = 0; i < inst.mult; i++) {
+                STATE.energy--; updateHUD();
                 await executeSingle(inst.action);
                 if (gameOver || STATE.missionCompleted) break;
             }
