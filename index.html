@@ -67,7 +67,7 @@
                 </div>
 
                 <!-- Textos del HUD (Centrados milimétricamente por coordenadas) -->
-                <p class="panel__stat-value panel__stat-value--energy" id="hud-energy-count">15</p>
+                <p class="panel__stat-value panel__stat-value--energy" id="hud-energy-count">20</p>
                 <p class="panel__stat-value panel__stat-value--lives" id="hud-lives-count">5</p>
                 <p class="panel__stat-value panel__stat-value--prizes" id="prize-count">0</p>
 
@@ -102,17 +102,18 @@
 
             </section>
 
-            <!-- Crédito del autor -->
-            <a class="credit-badge" href="https://wa.me/573142805349" target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp a joselopantoja">
-                <svg class="credit-badge__icon" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <circle cx="16" cy="16" r="16" fill="#25D366"/>
-                    <path fill="#fff" d="M16 7c-4.97 0-9 4.03-9 9 0 1.58.42 3.06 1.15 4.34L7 25l4.8-1.26A8.96 8.96 0 0 0 16 25c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 16.2c-1.4 0-2.72-.38-3.86-1.05l-.28-.16-2.85.75.76-2.78-.18-.29A7.18 7.18 0 0 1 8.8 16c0-3.98 3.23-7.2 7.2-7.2s7.2 3.22 7.2 7.2-3.23 7.2-7.2 7.2zm3.95-5.4c-.22-.11-1.28-.63-1.48-.7-.2-.07-.34-.11-.49.11-.14.22-.56.7-.69.84-.13.15-.25.16-.47.05-.22-.11-.93-.34-1.77-1.09-.65-.58-1.09-1.3-1.22-1.52-.13-.22-.01-.34.1-.45.1-.1.22-.25.33-.38.11-.13.15-.22.22-.36.07-.15.04-.28-.02-.39-.06-.11-.49-1.18-.67-1.62-.18-.43-.36-.37-.49-.38h-.42c-.15 0-.39.05-.59.28-.2.22-.77.75-.77 1.83s.79 2.13.9 2.27c.11.15 1.55 2.37 3.76 3.32.53.23.94.36 1.26.46.53.17 1.01.15 1.39.09.42-.06 1.28-.52 1.46-1.03.18-.5.18-.94.13-1.03-.05-.09-.2-.15-.42-.26z"/>
-                </svg>
-                <span class="credit-badge__text">Creado por @joselopantoja</span>
-            </a>
+            <!-- Crédito del autor: se muestra fuera del stage, ver .credit-badge (position: fixed) -->
 
         </main>
     </div>
+
+    <a class="credit-badge" href="https://wa.me/573142805349" target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp a joselopantoja">
+        <svg class="credit-badge__icon" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="16" cy="16" r="16" fill="#25D366"/>
+            <path fill="#fff" d="M16 7c-4.97 0-9 4.03-9 9 0 1.58.42 3.06 1.15 4.34L7 25l4.8-1.26A8.96 8.96 0 0 0 16 25c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 16.2c-1.4 0-2.72-.38-3.86-1.05l-.28-.16-2.85.75.76-2.78-.18-.29A7.18 7.18 0 0 1 8.8 16c0-3.98 3.23-7.2 7.2-7.2s7.2 3.22 7.2 7.2-3.23 7.2-7.2 7.2zm3.95-5.4c-.22-.11-1.28-.63-1.48-.7-.2-.07-.34-.11-.49.11-.14.22-.56.7-.69.84-.13.15-.25.16-.47.05-.22-.11-.93-.34-1.77-1.09-.65-.58-1.09-1.3-1.22-1.52-.13-.22-.01-.34.1-.45.1-.1.22-.25.33-.38.11-.13.15-.22.22-.36.07-.15.04-.28-.02-.39-.06-.11-.49-1.18-.67-1.62-.18-.43-.36-.37-.49-.38h-.42c-.15 0-.39.05-.59.28-.2.22-.77.75-.77 1.83s.79 2.13.9 2.27c.11.15 1.55 2.37 3.76 3.32.53.23.94.36 1.26.46.53.17 1.01.15 1.39.09.42-.06 1.28-.52 1.46-1.03.18-.5.18-.94.13-1.03-.05-.09-.2-.15-.42-.26z"/>
+        </svg>
+        <span class="credit-badge__text">Creado por @joselopantoja</span>
+    </a>
 
     <!-- Modal Dinámico -->
     <div id="game-modal" class="modal hidden">
