@@ -21,14 +21,8 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
 
-/* Fondo ajustado: Nunca se repite y rellena el 100% del viewport estirándose si es necesario */
 html, body {
     background-color: var(--color-black);
-    background-image: url('assets/backgrounds/bg.png');
-    background-size: 100% 100%; 
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
     width: 100vw;
     height: 100vh;
     overflow: hidden; /* Elimina scroll */
@@ -41,6 +35,12 @@ html, body {
     align-items: center;
     width: 100%;
     height: 100%;
+    /* El fondo vive aquí (y no en html/body) para que rote junto con el
+       contenido cuando el móvil está en vertical (ver media query abajo) */
+    background-image: url('assets/backgrounds/bg.png');
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .stage {
@@ -88,9 +88,45 @@ html, body {
     display: flex; flex-wrap: wrap; align-content: flex-start; gap: 10px; z-index: 20;
 }
 
-.block-row { display: flex; align-items: center; gap: 15px; cursor: grab; }
+.placeholder-text {
+    width: 100%;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+    font-family: var(--font-primary);
+    font-size: 19px;
+    font-weight: 400;
+    pointer-events: none;
+}
+
+.block-row { display: flex; align-items: center; gap: 15px; cursor: grab; touch-action: none; }
 .block-icon { width: 59px; height: 59px; background-size: contain; background-repeat: no-repeat; }
 .block-label { font-weight: 500; font-size: 23px; color: var(--color-text-dark); text-transform: uppercase; }
+
+/* Ghost que sigue al dedo/cursor mientras se arrastra un bloque (Pointer Events) */
+.drag-ghost {
+    position: fixed;
+    width: 64px;
+    height: 64px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    transform: translate(-50%, -50%);
+    opacity: 0.85;
+    pointer-events: none;
+    z-index: 9999;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
+}
+
+/* Feedback visual al soltar sobre el área de secuencia o un loop */
+.program-sequence-container.drag-over {
+    outline: 3px dashed rgba(255,255,255,0.7);
+    outline-offset: -6px;
+    border-radius: 12px;
+}
+.block-loop.mod-drag-over {
+    filter: brightness(1.3);
+    outline: 2px dashed #ffffff;
+}
 
 .block-in-program { width: 59px; height: 59px; background-size: contain; cursor: pointer; position: relative;}
 .block-in-program:hover { filter: brightness(1.1); }
@@ -194,10 +230,71 @@ html, body {
 }
 
 .panel__tooltip { position: absolute; left: 1606px; top: 354px; transform: translateX(-50%); font-weight: 400; font-size: var(--fs-tooltip); color: var(--color-text-cream); text-align: center; }
-.info-box { position: absolute; left: 968px; top: 825px; width: 812px; height: 216px; background-color: var(--color-box-gray); border-radius: 20px; }
-.info-box__text { position: absolute; left: 1374px; top: 839px; width: 778px; transform: translateX(-50%); font-size: var(--fs-info); text-align: center; color: var(--color-black); display: flex; align-items: center;}
+.info-box {
+    position: absolute;
+    left: 968px;
+    top: 825px;
+    width: 812px;
+    height: 216px;
+    background: linear-gradient(180deg, #f4ecd8 0%, #e6d6ae 100%);
+    border: 3px solid #8a5a2b;
+    border-radius: 20px;
+    box-shadow: inset 0 0 0 4px rgba(255,255,255,0.35), 0 6px 10px rgba(0,0,0,0.25);
+}
+.info-box__text {
+    position: absolute;
+    left: 968px;
+    top: 825px;
+    width: 812px;
+    height: 216px;
+    padding: 22px 30px;
+    box-sizing: border-box;
+    font-size: 22px;
+    line-height: 1.45;
+    text-align: center;
+    color: #3a2410;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
 .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+/* --- Crédito del autor --- */
+/* Se ubica en la franja libre inferior del stage (debajo del marco del juego
+   y de la caja de instrucciones, que terminan en y=1041 dentro de un stage
+   de 1080px de alto), para no solaparse con ningún otro elemento. */
+.credit-badge {
+    position: absolute;
+    right: 30px;
+    bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 12px 3px 5px;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 20px;
+    text-decoration: none;
+    color: var(--color-text-cream);
+    font-family: var(--font-primary);
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 60;
+    line-height: 1;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+.credit-badge:hover,
+.credit-badge:focus-visible {
+    background: rgba(0, 0, 0, 0.6);
+    transform: translateY(-2px);
+}
+.credit-badge__icon { width: 20px; height: 20px; flex-shrink: 0; }
+.credit-badge__text { white-space: nowrap; }
+
+@media (max-width: 900px) and (orientation: portrait) {
+    .credit-badge { font-size: 13px; padding: 3px 10px 3px 4px; bottom: 4px; right: 20px; }
+    .credit-badge__icon { width: 17px; height: 17px; }
+}
 
 /* --- Móvil en vertical: se rota el juego automáticamente a horizontal --- */
 @media (max-width: 900px) and (orientation: portrait) {
