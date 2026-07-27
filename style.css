@@ -199,6 +199,21 @@ html, body {
 
 .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 
+/* --- Móvil en vertical: se rota el juego automáticamente a horizontal --- */
+@media (max-width: 900px) and (orientation: portrait) {
+    .stage-wrapper {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        width: 100vh;
+        height: 100vw;
+        transform: rotate(90deg);
+        transform-origin: center center;
+        margin-top: calc(-50vw);
+        margin-left: calc(-50vh);
+    }
+}
+
 /* --- Modal Base --- */
 .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 1000; }
 .modal.hidden { display: none; }
