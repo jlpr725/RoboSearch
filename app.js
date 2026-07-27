@@ -486,8 +486,14 @@ function resizeStage() {
     const STAGE_W = 1920;
     const STAGE_H = 1080;
 
-    const scaleW = window.innerWidth / STAGE_W;
-    const scaleH = window.innerHeight / STAGE_H;
+    // En móvil vertical, el CSS rota el stage-wrapper 90°, así que el ancho/alto
+    // reales disponibles quedan invertidos respecto al viewport del navegador.
+    const isMobilePortrait = window.matchMedia('(max-width: 900px) and (orientation: portrait)').matches;
+    const availableW = isMobilePortrait ? window.innerHeight : window.innerWidth;
+    const availableH = isMobilePortrait ? window.innerWidth : window.innerHeight;
+
+    const scaleW = availableW / STAGE_W;
+    const scaleH = availableH / STAGE_H;
     
     const scale = Math.min(scaleW, scaleH);
 
@@ -496,4 +502,5 @@ function resizeStage() {
 
 window.addEventListener('resize', resizeStage);
 window.addEventListener('load', resizeStage);
+window.addEventListener('orientationchange', resizeStage);
 resizeStage();
