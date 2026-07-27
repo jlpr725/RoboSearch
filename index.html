@@ -4,16 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Robo Cowboy</title>
+    <meta name="description" content="Robo Cowboy: juego educativo de pensamiento computacional. Programa a un robot vaquero con bloques para esquivar obstáculos y encontrar el tesoro.">
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#8a5a2b">
+
+    <!-- Iconos e instalación en cualquier dispositivo -->
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Robo Cowboy">
+    <meta name="mobile-web-app-capable" content="yes">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <h1 class="visually-hidden">RoboCowboy — Juego de pensamiento computacional</h1>
+    <h1 class="visually-hidden">Robo Cowboy — Juego de pensamiento computacional</h1>
 
     <div class="stage-wrapper">
         <main class="stage" id="stage">
@@ -88,9 +98,18 @@
 
                 <!-- Caja de información (Misión) -->
                 <div class="info-box"></div>
-                <p class="info-box__text">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
+                <p class="info-box__text">🧩 Arrastra bloques a la secuencia para programar al robot 🤖 (mover, girar, tomar). ⚡ Cada bloque gasta 1 de energía. 🚧 Esquiva obstáculos, 🧪 recoge el booster (+2 energía) y usa TOMAR sobre el cofre 💰 antes de quedarte sin batería o vidas ❤️.</p>
 
             </section>
+
+            <!-- Crédito del autor -->
+            <a class="credit-badge" href="https://wa.me/573142805349" target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp a joselopantoja">
+                <svg class="credit-badge__icon" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <circle cx="16" cy="16" r="16" fill="#25D366"/>
+                    <path fill="#fff" d="M16 7c-4.97 0-9 4.03-9 9 0 1.58.42 3.06 1.15 4.34L7 25l4.8-1.26A8.96 8.96 0 0 0 16 25c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 16.2c-1.4 0-2.72-.38-3.86-1.05l-.28-.16-2.85.75.76-2.78-.18-.29A7.18 7.18 0 0 1 8.8 16c0-3.98 3.23-7.2 7.2-7.2s7.2 3.22 7.2 7.2-3.23 7.2-7.2 7.2zm3.95-5.4c-.22-.11-1.28-.63-1.48-.7-.2-.07-.34-.11-.49.11-.14.22-.56.7-.69.84-.13.15-.25.16-.47.05-.22-.11-.93-.34-1.77-1.09-.65-.58-1.09-1.3-1.22-1.52-.13-.22-.01-.34.1-.45.1-.1.22-.25.33-.38.11-.13.15-.22.22-.36.07-.15.04-.28-.02-.39-.06-.11-.49-1.18-.67-1.62-.18-.43-.36-.37-.49-.38h-.42c-.15 0-.39.05-.59.28-.2.22-.77.75-.77 1.83s.79 2.13.9 2.27c.11.15 1.55 2.37 3.76 3.32.53.23.94.36 1.26.46.53.17 1.01.15 1.39.09.42-.06 1.28-.52 1.46-1.03.18-.5.18-.94.13-1.03-.05-.09-.2-.15-.42-.26z"/>
+                </svg>
+                <span class="credit-badge__text">Creado por @joselopantoja</span>
+            </a>
 
         </main>
     </div>
