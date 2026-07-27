@@ -38,7 +38,7 @@ const STATE = {
     treasure: { x: 7, y: 7 },
     booster: { x: 4, y: 3, active: true },
     obstacles: [],
-    energy: 15,
+    energy: 20,
     prizes: 0,
     lives: 5,
     missionCompleted: false,
@@ -128,7 +128,7 @@ function generateRandomMap() {
     STATE.robot = { x: 0, y: 0, dir: 'E' };
     STATE.missionCompleted = false;
     STATE.obstacles = [];
-    STATE.energy = 15;
+    STATE.energy = 20;
 
     // El tesoro siempre aparece en el cuadrante más alejado del inicio
     STATE.treasure = {
@@ -528,7 +528,7 @@ document.getElementById('btn-run').addEventListener('click', async () => {
 
         if (STATE.booster.active && STATE.robot.x === STATE.booster.x && STATE.robot.y === STATE.booster.y) {
             STATE.booster.active = false;
-            STATE.energy = Math.min(15, STATE.energy + 2);
+            STATE.energy = Math.min(20, STATE.energy + 2);
             updateBoosterVisibility();
             updateHUD();
         }
@@ -563,10 +563,9 @@ document.getElementById('btn-run').addEventListener('click', async () => {
             STATE.energy--; updateHUD();
             await executeSingle(inst.action);
         } else if (inst.type === 'loop') {
-            const cost = inst.mult;
-            if (STATE.energy < cost) { handleFailure('¡Batería Agotada!', 'Energía insuficiente para ejecutar este loop.'); break; }
+            if (STATE.energy < 1) { handleFailure('¡Batería Agotada!', 'Energía insuficiente para ejecutar este loop.'); break; }
+            STATE.energy--; updateHUD();
             for (let i = 0; i < inst.mult; i++) {
-                STATE.energy--; updateHUD();
                 await executeSingle(inst.action);
                 if (gameOver || STATE.missionCompleted) break;
             }
