@@ -1,385 +1,206 @@
 :root {
-    --bg-color: #0d1117;
-    --text-dark: #c9d1d9;
-    --border-color: #30363d;
-    --primary: #17cf73; 
-    --success: #3fb950;
-    --secondary: #8b949e;
-    --danger: #f85149;
-    
-    /* Bloques Estilo Consola */
-    --block-mov: #1a7fcc; 
-    --block-act: #1a9e55;
-    --block-cond: #d4a017;
-    --block-jump: #9f7aea; 
-    --block-mod: #ed64a6; 
-    
-    --panel-bg: #161b22;
-    --header-bg: #161b22;
-    --tile-bg: #0d1117;
-    --tile-border: #161b22;
+    --color-bg-mapa: #e8c186;
+    --color-text-cream: #f6e3b4;
+    --color-text-dark: #220c00;
+    --color-box-gray: #d9d9d9;
+    --color-black: #000000;
+
+    --font-primary: 'Oswald', sans-serif;
+    --fs-tooltip: 19px;
+    --fs-run-label: 20px;
+    --fs-stat: 36px;
+    --fs-info: 24px;
+
+    /* Base 1920x1080 */
+    --stage-w: 1920px;
+    --stage-h: 1080px;
+    --tile-size: 92px;
+    --map-left: 178px;
+    --map-top: 243px;
 }
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: 'Segoe UI', 'Roboto', Tahoma, Geneva, Verdana, sans-serif;
-    user-select: none; 
-}
+* { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
 
-body.game-theme {
-    background-color: var(--bg-color);
-    color: var(--text-dark);
-    display: flex;
-    flex-direction: column;
+/* Fondo ajustado: Nunca se repite y rellena el 100% del viewport estirándose si es necesario */
+html, body {
+    background-color: var(--color-black);
+    background-image: url('assets/backgrounds/bg.png');
+    background-size: 100% 100%; 
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    width: 100vw;
     height: 100vh;
-    overflow: hidden;
+    overflow: hidden; /* Elimina scroll */
+    font-family: var(--font-primary);
 }
 
-.game-header {
-    background-color: var(--header-bg);
-    border-bottom: 2px solid var(--border-color);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    height: 60px;
+.stage-wrapper {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 1.5rem;
-}
-
-.game-hud {
-    display: flex;
-    gap: 8px;
-}
-
-.hud-item {
-    font-weight: bold;
-    padding: 0.4rem 0.8rem;
-    border-radius: 6px;
-    font-size: 0.9rem;
-    border: 1px solid var(--border-color);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.energy-panel { background: #1a7fcc33; color: #42a5f5; border-color: #1a7fcc; }
-.prize-panel { background: #d4a01733; color: #ffd54f; border-color: #d4a017; }
-.status-panel { background: #161b22; color: #8b949e; }
-
-.btn-game {
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 6px;
-    font-size: 0.9rem;
-    font-weight: bold;
-    color: white;
-    cursor: pointer;
-    box-shadow: inset 0 -2px 0 rgba(0,0,0,0.3);
-    transition: all 0.2s;
-}
-
-.btn-primary { background-color: var(--primary); }
-.btn-secondary { background-color: var(--secondary); }
-.btn-success { background-color: var(--success); }
-
-.btn-game:hover { opacity: 0.9; transform: translateY(-1px); }
-.btn-game:active { transform: translateY(1px); box-shadow: inset 0 2px 0 rgba(0,0,0,0.3); }
-
-/* ESCRITORIO: Mapa 70% | Controles 30% */
-.game-workspace {
-    display: grid;
-    grid-template-columns: 7fr 3fr; /* Proporción estricta 70/30 */
-    gap: 1rem;
-    padding: 1rem;
-    height: calc(100vh - 60px);
-    overflow: hidden;
-}
-
-.controls-wrapper {
-    display: grid;
-    grid-template-rows: auto 1fr;
-    gap: 1rem;
-    min-height: 0;
-}
-
-.game-panel {
-    background: var(--panel-bg);
-    border-radius: 12px;
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-    border: 1px solid var(--border-color);
-    overflow: hidden;
-}
-
-.game-panel h2 {
-    font-size: 0.9rem;
-    margin-bottom: 0.5rem;
-    color: #8b949e;
-    text-align: center;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-/* --- Paleta de bloques --- */
-.game-block-palette {
-    display: flex;
-    flex-wrap: wrap; 
-    gap: 8px;
     justify-content: center;
-}
-
-/* --- Forma Cuadrada de los Bloques --- */
-.block-game {
-    width: 3.5rem; 
-    height: 3.5rem; 
-    display: flex;
-    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    font-size: 1.6rem; 
-    color: white;
-    border-radius: 8px;
-    cursor: grab;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2), inset 0 -3px 0 rgba(0,0,0,0.3);
-}
-
-.block-label {
-    font-size: 0.7rem;
-    font-weight: bold;
-    margin-top: 2px;
-    line-height: 1;
-}
-
-.block-mov { background-color: var(--block-mov); }
-.block-act { background-color: var(--block-act); }
-.block-cond { background-color: var(--block-cond); }
-.block-jump { background-color: var(--block-jump); }
-.block-mod { background-color: var(--block-mod); }
-
-.block-in-program {
-    position: relative;
-    transition: all 0.2s ease;
-}
-
-.block-in-program::after {
-    content: "✖";
-    position: absolute;
-    right: 4px;
-    top: 4px;
-    color: white;
-    font-size: 10px;
-    opacity: 0;
-    transition: opacity 0.2s ease;
-    text-shadow: 0 0 2px black;
-}
-
-.block-in-program:hover {
-    cursor: pointer;
-    box-shadow: 0 0 8px rgba(248, 81, 73, 0.8); 
-    opacity: 0.9;
-}
-.block-in-program:hover::after { opacity: 1; }
-
-.canvas-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.5rem;
-}
-
-.game-actions {
-    display: flex;
-    gap: 6px;
-}
-
-/* --- Secuencia Horizontal con Salto de Línea --- */
-.game-program-area {
-    display: flex;
-    flex-direction: row; 
-    flex-wrap: wrap; 
-    align-content: flex-start; 
-    gap: 8px;
-    background: var(--tile-bg);
-    border: 2px dashed var(--border-color);
-    border-radius: 8px;
-    padding: 0.8rem;
-    overflow-y: auto;
-    flex: 1;
-}
-
-.game-program-area.drag-over {
-    background: #17cf731a;
-    border-color: #17cf73;
-}
-
-.placeholder-text {
-    color: var(--secondary);
-    font-size: 0.85rem;
-    text-align: center;
-    width: 100%;
-    margin-top: 1rem;
-}
-
-/* Estilos de bucles anidados en la secuencia */
-.block-in-program.block-mod {
-    width: auto;
-    min-width: 3.8rem;
-    height: auto;
-    min-height: 3.8rem;
-    padding: 6px;
-}
-.block-mod.mod-drag-over {
-    background-color: #f687b3;
-    border: 2px dashed white;
-}
-.mod-slot {
-    background: rgba(0,0,0,0.25);
-    border: 1px dashed rgba(255,255,255,0.6);
-    border-radius: 6px;
-    width: 2.5rem;
-    height: 2.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.8rem;
-    color: rgba(255,255,255,0.6);
-    pointer-events: none;
-    margin-top: 4px;
-}
-.block-nested {
-    width: 2.5rem;
-    height: 2.5rem; 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.3rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-    margin: 0;
-    position: relative;
-    border-radius: 6px;
-    color: white;
-}
-.block-nested::after {
-    content: "✖"; position: absolute; right: 2px; top: 2px; font-size: 8px; opacity:0; transition: 0.2s; text-shadow: 0 0 2px black;
-}
-.block-nested:hover { cursor: pointer; background-color: var(--danger) !important; }
-.block-nested:hover::after { opacity: 1; }
-
-/* MAPA PROTAGONISTA (70%) */
-.game-map-container {
-    padding: 1rem;
-}
-
-.map-container {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-}
-
-.game-grid {
-    border: 4px solid var(--tile-border);
-    border-radius: 12px;
-    background: var(--tile-bg);
     width: 100%;
     height: 100%;
-    max-height: 100%;
-    aspect-ratio: 1; 
-    padding: 12px;
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(5, 1fr);
-    gap: 6px;
 }
 
-.tile {
-    border-radius: 8px;
-    font-size: clamp(1.5rem, 4vw, 3.5rem); 
+.stage {
     position: relative;
-    box-shadow: inset 0 2px 6px rgba(0,0,0,0.2);
-    background-color: var(--tile-bg);
-    border: 1px solid #161b22;
+    width: var(--stage-w);
+    height: var(--stage-h);
+    transform-origin: center center;
+    flex-shrink: 0;
+}
+
+.stage__img {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none;
+}
+
+/* --- Mapa --- */
+.map__bg {
+    position: absolute; left: var(--map-left); top: 244px; width: 735px; height: 735px; background-color: var(--color-bg-mapa); z-index: 1;
+}
+.map-grid {
+    position: absolute; left: var(--map-left); top: var(--map-top); width: calc(var(--tile-size) * 8); height: calc(var(--tile-size) * 8);
+    display: grid; grid-template-columns: repeat(8, var(--tile-size)); grid-template-rows: repeat(8, var(--tile-size)); z-index: 2;
+}
+.tile { position: relative; width: 100%; height: 100%; background-size: cover; }
+.tile-overlay { position: absolute; inset: 0; background-size: contain; background-position: center; background-repeat: no-repeat; z-index: 3; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.5)); }
+
+/* Personaje dinámico */
+.robot-wrapper { position: absolute; display: flex; align-items: center; justify-content: center; z-index: 5; transition: left 0.48s ease-in-out, top 0.48s ease-in-out; }
+.robot-sprite { width: 70%; height: auto; image-rendering: pixelated; filter: drop-shadow(0 3px 4px rgba(0,0,0,0.6)); }
+
+/* --- Assets fijos --- */
+.stage__frame { position: absolute; left: 143px; top: 183px; width: 809px; height: 858px; pointer-events: none; z-index: 10;}
+.stage__title { position: absolute; left: 282px; top: 37px; width: 527px; height: 182px; z-index: 15;} 
+
+/* --- Panel de Bloques y Secuencia --- */
+.panel__blocks-bg { position: absolute; left: 968px; top: 298px; width: 396px; height: 504px; }
+.panel__sequence-bg { position: absolute; left: 1382px; top: 298px; width: 398px; height: 350px; }
+
+/* Contenedores para Drag & Drop */
+.blocks-palette-container {
+    position: absolute; left: 1013px; top: 379px; width: 320px; height: 390px;
+    display: flex; flex-direction: column; gap: 12px; z-index: 20;
+}
+.program-sequence-container {
+    position: absolute; left: 1409px; top: 412px; width: 350px; height: 213px;
+    display: flex; flex-wrap: wrap; align-content: flex-start; gap: 10px; z-index: 20;
+}
+
+.block-row { display: flex; align-items: center; gap: 15px; cursor: grab; }
+.block-icon { width: 59px; height: 59px; background-size: contain; background-repeat: no-repeat; }
+.block-label { font-weight: 500; font-size: 23px; color: var(--color-text-dark); text-transform: uppercase; }
+
+.block-in-program { width: 59px; height: 59px; background-size: contain; cursor: pointer; position: relative;}
+.block-in-program:hover { filter: brightness(1.1); }
+
+/* --- Bloque LOOP dentro de la secuencia (según captura compartida) --- */
+.block-in-program.block-loop {
+    width: auto;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px 4px 4px;
+    background-color: rgba(78, 34, 94, 0.6);
+    border: 2px dashed #c9a3e0;
+    border-radius: 22px;
+}
+.block-in-program.block-loop:hover { filter: brightness(1.1); }
+
+.loop-icon {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: #8b3cc5 url('assets/blocks/bloque_loop.png') no-repeat center / 65%;
+}
+
+.loop-mult {
+    font-weight: 700;
+    font-size: 18px;
+    color: #ffffff;
+    white-space: nowrap;
+}
+
+.mod-slot {
+    width: 26px;
+    height: 26px;
+    flex-shrink: 0;
+    border-radius: 6px;
+    background-color: rgba(255, 255, 255, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1;
+    color: #ffffff;
+    cursor: pointer;
 }
 
-/* Animaciones Premium */
-@keyframes shake { 0% { transform: translate(1px, 1px); } 20% { transform: translate(-3px, -1px); } 40% { transform: translate(1px, -3px); } 60% { transform: translate(-3px, 1px); } 80% { transform: translate(2px, -1px); } 100% { transform: translate(0, 0); } }
-@keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-
-.tile.obstacle-hit { animation: shake 0.4s ease; background-color: #f8514933 !important; border-color: var(--danger); }
-.tile.battery-taken { animation: bounce 0.4s ease; background-color: #1a9e5533 !important; border-color: var(--success); }
-
-/* Modales */
-.game-modal-overlay {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.8);
-    display: flex; align-items: center; justify-content: center;
-    z-index: 1000;
+.block-nested {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 6px;
+    cursor: pointer;
 }
+
+/* --- Botones --- */
+.panel__run-btn { position: absolute; left: 1442px; top: 669px; width: 277px; height: 97px; background: none; border: none; cursor: pointer; z-index: 20; padding: 0; }
+.panel__delete-btn { position: absolute; left: 1409px; top: 346px; width: 49px; height: 56px; background: none; border: none; cursor: pointer; z-index: 20; padding: 0;}
+.panel__run-btn:hover, .panel__delete-btn:hover { filter: brightness(1.1); transform: scale(1.02); transition: 0.2s;}
+
+/* --- HUD (Ubicaciones) --- */
+.panel__energy { position: absolute; left: 968px; top: 183px; width: 152px; height: 87px; }
+.panel__lives { position: absolute; left: 1212px; top: 183px; width: 152px; height: 87px; }
+.panel__prizes { position: absolute; left: 1587px; top: 183px; width: 193px; height: 87px; }
+
+/* Textos Estadísticas (Centrado absoluto al medio de sus gráficos) */
+.panel__stat-value { 
+    position: absolute;
+    top: 226px; /* Eje Y central (183 + mitad del alto) */
+    transform: translate(-50%, -50%);
+    font-weight: 500; 
+    font-size: var(--fs-stat); 
+    color: var(--color-text-cream); 
+    margin: 0;
+    z-index: 30; /* Z-index super alto para garantizar visibilidad */
+    pointer-events: none;
+}
+.panel__stat-value--energy { left: 1080px; /* Eje X central */ }
+.panel__stat-value--lives { left: 1260px; }
+.panel__stat-value--prizes { left: 1650px; }
+
+/* Texto del Botón Ejecutar */
+.panel__run-label { 
+    position: absolute;
+    left: 1561px;
+    top: 715px; /* Centro del botón (669 + mitad) */
+    transform: translate(-50%, -50%);
+    font-weight: 500; 
+    font-size: var(--fs-run-label); 
+    color: var(--color-text-cream); 
+    text-transform: uppercase; 
+    margin: 0; 
+    z-index: 30;
+    pointer-events: none;
+}
+
+.panel__tooltip { position: absolute; left: 1606px; top: 354px; transform: translateX(-50%); font-weight: 400; font-size: var(--fs-tooltip); color: var(--color-text-cream); text-align: center; }
+.info-box { position: absolute; left: 968px; top: 825px; width: 812px; height: 216px; background-color: var(--color-box-gray); border-radius: 20px; }
+.info-box__text { position: absolute; left: 1374px; top: 839px; width: 778px; transform: translateX(-50%); font-size: var(--fs-info); text-align: center; color: var(--color-black); display: flex; align-items: center;}
+
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+/* --- Modal Base --- */
+.modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 1000; }
 .modal.hidden { display: none; }
-.game-modal-content {
-    background: var(--panel-bg);
-    padding: 2rem;
-    border-radius: 16px;
-    text-align: center;
-    max-width: 350px;
-    width: 90%;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-    border: 1px solid var(--border-color);
-}
-.game-modal-content h2 { color: #e6edf3; margin-bottom: 1rem; font-size: 1.5rem; }
-.game-modal-content p { color: var(--text-dark); font-size: 1rem; margin-bottom: 1.5rem; }
-
-/* DISEÑO MÓVIL: Mapa 70% | Controles 30% (Vertical) */
-@media (max-width: 900px) {
-    .game-header { padding: 0 0.5rem; height: 50px; }
-    
-    .game-workspace {
-        grid-template-columns: 1fr;
-        grid-template-rows: 7fr 3fr; 
-        padding: 0.4rem;
-        gap: 0.4rem;
-        height: calc(100vh - 50px);
-    }
-
-    .controls-wrapper {
-        grid-template-rows: auto 1fr;
-        gap: 0.4rem;
-    }
-
-    .game-panel { padding: 0.5rem; border-radius: 8px; }
-    .game-panel h2 { display: none; } 
-
-    .game-block-palette {
-        gap: 4px;
-    }
-    
-    .block-game {
-        width: 2.8rem;
-        height: 2.8rem;
-        font-size: 1.3rem;
-    }
-
-    .canvas-header { margin-bottom: 0; }
-    .game-map-container { padding: 0.2rem; }
-    .game-grid {
-        max-width: 100%;
-        max-height: 100%;
-        gap: 4px;
-        padding: 6px;
-    }
-
-    /* Panel de Vidas en el HUD */
-.lives-panel { 
-    background: #f8514933; 
-    color: #f85149; 
-    border-color: #f85149; 
-}
-}
+.modal-content { background: #f4e3c1; border: 6px solid #6b4423; border-radius: 16px; padding: 2rem; text-align: center; width: 350px; font-family: sans-serif;}
+.btn-text { background: #8a5a2b; color: #fff; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;}
