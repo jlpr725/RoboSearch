@@ -3,77 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CodeBot</title>
+    <title>Robo Cowboy</title>
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0d1117">
+    <meta name="theme-color" content="#8a5a2b">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500&display=swap" rel="stylesheet">
 </head>
-<body class="game-theme">
-    <header class="top-bar game-header">
-        <div class="hud game-hud">
-            <div class="hud-item energy-panel"><span class="icon">⚡</span> <span id="hud-energy-count">15</span></div>
-            <div class="hud-item prize-panel"><span class="icon">🎁</span> <span id="prize-count">0</span></div>
+<body>
+
+    <h1 class="visually-hidden">RoboCowboy — Juego de pensamiento computacional</h1>
+
+    <div class="stage-wrapper">
+        <main class="stage" id="stage">
             
-        </div>
-        <button id="btn-randomize" class="btn-primary btn-game btn-roll"><span class="icon">🎲</span> Nuevo Mapa</button>
-    </header>
-
-    <main class="workspace game-workspace">
-        <!-- Mapa Protagonista (70%) -->
-        <aside class="simulation-section game-panel game-map-container">
-            <div class="map-container">
-                <div id="game-grid" class="grid-5x5 game-grid"></div>
+            <!-- Título -->
+            <div class="stage__title">
+                <img class="stage__img" src="assets/backgrounds/titulo.png" alt="RoboCowboy">
             </div>
-        </aside>
 
-        <!-- Contenedor del 30% restante (Bloques y Secuencia) -->
-        <div class="controls-wrapper">
-            <!-- Sección de Controles -->
-            <aside class="palette game-panel game-controls">
-                <h2>Bloques</h2>
-                <div class="blocks-container game-block-palette">
-                    <div class="block block-mov block-game" draggable="true" data-action="avanzar" data-icon="⬆️" title="Avanzar">⬆️</div>
-                    <div class="block block-mov block-game" draggable="true" data-action="girar-der" data-icon="↻" title="Girar Derecha">↻</div>
-                    <div class="block block-mov block-game" draggable="true" data-action="girar-izq" data-icon="↺" title="Girar Izquierda">↺</div>
-                    <div class="block block-jump block-game" draggable="true" data-action="saltar" data-icon="🦘" title="Saltar">🦘</div>
-                    <div class="block block-act block-game" draggable="true" data-action="tomar" data-icon="🤏" title="Tomar">🤏</div>
-                    <div class="block block-cond block-game" draggable="true" data-action="si-camino-libre" data-icon="❓" title="Si camino libre">❓</div>
-                    
-                    <!-- Bloques Multiplicadores (Icono + Texto debajo) -->
-                    <div class="block block-mod block-game" draggable="true" data-action="x2" data-icon="🔁" data-label="x2" title="Repetir x2">
-                        🔁<span class="block-label">x2</span>
-                    </div>
-                    <div class="block block-mod block-game" draggable="true" data-action="x3" data-icon="🔁" data-label="x3" title="Repetir x3">
-                        🔁<span class="block-label">x3</span>
-                    </div>
-                    <div class="block block-mod block-game" draggable="true" data-action="x4" data-icon="🔁" data-label="x4" title="Repetir x4">
-                        🔁<span class="block-label">x4</span>
-                    </div>
-                </div>
-            </aside>
+            <!-- Marco del tablero -->
+            <div class="stage__frame" aria-hidden="true">
+                <img class="stage__img" src="assets/frames/frame.png" alt="">
+            </div>
 
-            <!-- Área de Secuencia -->
-            <section class="canvas-section game-panel game-sequence">
-                <div class="canvas-header">
-                    <h2>Secuencia</h2>
-                    <div class="canvas-actions game-actions">
-                        <button id="btn-clear" class="btn-secondary btn-game" title="Borrar todo">🗑️</button>
-                        <button id="btn-run" class="btn-success btn-game" title="Ejecutar">▶</button>
-                    </div>
+            <!-- Fondo de color del mapa -->
+            <div class="map__bg" aria-hidden="true"></div>
+
+            <!-- Tablero dinámico del juego -->
+            <section id="game-grid" class="map-grid" aria-label="Mapa del recorrido del robot"></section>
+
+            <!-- Panel Derecho: Stats y Controles -->
+            <section aria-label="Panel de programación por bloques">
+                
+                <!-- Fondos de los paneles -->
+                <div class="panel__blocks-bg" aria-hidden="true">
+                    <img class="stage__img" src="assets/frames/frame_bloques.png" alt="">
                 </div>
-                <div id="program-area" class="program-area game-program-area">
+                <div class="panel__sequence-bg" aria-hidden="true">
+                    <img class="stage__img" src="assets/frames/frame_secuencia.png" alt="">
+                </div>
+
+                <!-- Imágenes de los Frames HUD -->
+                <div class="panel__energy" aria-hidden="true">
+                    <img class="stage__img" src="assets/hud/frame_energia.png" alt="">
+                </div>
+                <div class="panel__lives" aria-hidden="true">
+                    <img class="stage__img" src="assets/hud/frame_vidas.png" alt="">
+                </div>
+                <div class="panel__prizes" aria-hidden="true">
+                    <img class="stage__img" src="assets/hud/frame_premios.png" alt="">
+                </div>
+
+                <!-- Textos del HUD (Centrados milimétricamente por coordenadas) -->
+                <p class="panel__stat-value panel__stat-value--energy" id="hud-energy-count">15</p>
+                <p class="panel__stat-value panel__stat-value--lives" id="hud-lives-count">5</p>
+                <p class="panel__stat-value panel__stat-value--prizes" id="prize-count">0</p>
+
+                <!-- Paleta de bloques dinámicos -->
+                <div id="blocks-container" class="blocks-palette-container">
+                    <!-- app.js inyectará los bloques aquí -->
+                </div>
+
+                <!-- Área de Secuencia -->
+                <div id="program-area" class="program-sequence-container">
                     <p class="placeholder-text">Arrastra bloques aquí...</p>
                 </div>
-            </section>
-        </div>
-    </main>
 
-    <!-- Modal / Mensaje Emergente Estilizado -->
-    <div id="game-modal" class="modal hidden game-modal-overlay">
-        <div class="modal-content game-modal-content">
+                <!-- Botones de Acción (Se añadió class="stage__img" para que no desborden) -->
+                <button type="button" class="panel__delete-btn" id="btn-clear" aria-label="Eliminar secuencia">
+                    <img class="stage__img" src="assets/buttons/btn_eliminar.png" alt="">
+                </button>
+                <p class="panel__tooltip">
+                    <span>Elimina toda la secuencia completa</span>
+                </p>
+
+                <button type="button" class="panel__run-btn" id="btn-run" aria-label="Ejecutar programa">
+                    <img class="stage__img" src="assets/buttons/btn_ejecutar.png" alt="">
+                </button>
+                
+                <!-- Texto del botón ejecutar centrado matemáticamente -->
+                <p class="panel__run-label">ejecutar programa</p>
+
+                <!-- Caja de información (Misión) -->
+                <div class="info-box"></div>
+                <p class="info-box__text">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
+
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Modal Dinámico -->
+    <div id="game-modal" class="modal hidden">
+        <div class="modal-content">
             <h2 id="modal-title">¡Título!</h2>
             <p id="modal-desc">Descripción...</p>
-            <button id="modal-btn" class="btn-primary btn-game">Aceptar</button>
+            <button id="modal-btn" class="btn-text">Aceptar</button>
         </div>
     </div>
 
