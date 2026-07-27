@@ -261,39 +261,42 @@ html, body {
 .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 
 /* --- Crédito del autor --- */
-/* Se ubica en la franja libre inferior del stage (debajo del marco del juego
-   y de la caja de instrucciones, que terminan en y=1041 dentro de un stage
-   de 1080px de alto), para no solaparse con ningún otro elemento. */
+/* position: fixed respecto a la ventana real del dispositivo (no al .stage
+   escalado/rotado), para que siempre sea visible sin importar el tamaño de
+   pantalla, el factor de escala o el giro en móvil (antes, al vivir dentro
+   del stage, en tablets terminaba diminuto o recortado fuera del viewport). */
 .credit-badge {
-    position: absolute;
-    right: 30px;
-    bottom: 5px;
+    position: fixed;
+    right: max(14px, env(safe-area-inset-right));
+    bottom: max(12px, env(safe-area-inset-bottom));
     display: flex;
     align-items: center;
-    gap: 6px;
-    padding: 3px 12px 3px 5px;
-    background: rgba(0, 0, 0, 0.4);
-    border-radius: 20px;
+    gap: 7px;
+    padding: 6px 14px 6px 6px;
+    background: rgba(20, 12, 4, 0.72);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 22px;
     text-decoration: none;
     color: var(--color-text-cream);
     font-family: var(--font-primary);
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 500;
-    z-index: 60;
     line-height: 1;
+    z-index: 500;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.35);
     transition: background 0.2s ease, transform 0.2s ease;
 }
 .credit-badge:hover,
 .credit-badge:focus-visible {
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(20, 12, 4, 0.9);
     transform: translateY(-2px);
 }
-.credit-badge__icon { width: 20px; height: 20px; flex-shrink: 0; }
+.credit-badge__icon { width: 22px; height: 22px; flex-shrink: 0; }
 .credit-badge__text { white-space: nowrap; }
 
-@media (max-width: 900px) and (orientation: portrait) {
-    .credit-badge { font-size: 13px; padding: 3px 10px 3px 4px; bottom: 4px; right: 20px; }
-    .credit-badge__icon { width: 17px; height: 17px; }
+@media (max-width: 520px) {
+    .credit-badge { font-size: 12px; padding: 5px 10px 5px 5px; gap: 5px; }
+    .credit-badge__icon { width: 18px; height: 18px; }
 }
 
 /* --- Móvil en vertical: se rota el juego automáticamente a horizontal --- */
